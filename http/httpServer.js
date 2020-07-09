@@ -1,7 +1,7 @@
 const express = require("express");
-const userRouter = require('./userRouter');
+const userRouter = require("./userRouter");
 
-// I probably want helmet and cors
+// I probably want helmet, morgan (logging middleware) and cors
 
 const server = express();
 
@@ -9,7 +9,7 @@ const server = express();
 server.use(express.json());
 
 // Routers
-server.use('/users', userRouter);
+server.use("/users", userRouter);
 
 // Sanity Check Route
 server.get("/", (req, res, next) => {
