@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "kevinmei",
+    "password": null,
+    "database": "chat-dev",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "kevinmei",
+    "password": null,
+    "database": "chat_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "kevinmei",
+    "password": null,
+    "database": "chat_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  }
+}
