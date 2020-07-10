@@ -1,0 +1,28 @@
+{
+  "name": "nodechat",
+  "version": "1.0.0",
+  "description": "basic backend to experiment with sequelize, postgres, socket.io, node/express",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node": "^14.5.0",
+    "pg": "^8.2.2",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Derrick-Mei/nodeChat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Derrick-Mei/nodeChat/issues"
+  },
+  "homepage": "https://github.com/Derrick-Mei/nodeChat#readme"
+}
