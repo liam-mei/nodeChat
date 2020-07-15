@@ -1,12 +1,16 @@
 const server = require("./http/httpServer");
 const secrets = require("./secrets");
-const db = require("./database/models").sequelize;
+const db = require("./databaseOld/modelsOld");
+
+// const { User, Message, Room } = db;
+
+// User.hasMany(Message);
+// Message.belongsTo(User);
+
+// console.log(User())
+
 
 const PORT = secrets.port;
-
-db.authenticate({ force: true })
-  .then(() => console.log("I connected"))
-  .catch((err) => console.log(err));
 
 server.listen(PORT, () => {
   console.log(`\n *** Server Running on http://localhost:${PORT} ***\n`);
