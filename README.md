@@ -35,3 +35,13 @@ Sequelize Commands
 5. sequelize model:create --name TodoItem --attributes content:string,complete:boolean
 6. sequelize db:migrate
 7. sequelize-cli seed:generate --name todo
+8. sequelize db:seed:all
+
+
+
+// Stop all node processes
+kill -9 $(ps aux | grep '\snode\s' | awk '{print $2}')
+
+1. Todos
+   1. seed data
+   2. make login endpoint

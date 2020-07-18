@@ -5,7 +5,7 @@ const router = express.Router({
 });
 
 router.get("/login", (req, res, next) => {
-  const { user, password } = req;
+  const { user, password } = req.body;
   res.json({ user, password });
 });
 

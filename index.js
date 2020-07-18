@@ -1,17 +1,13 @@
 const server = require("./http/httpServer");
 const secrets = require("./secrets");
-const db = require("./databaseOld/modelsOld");
+const db = require("./database/models");
 
-// const { User, Message, Room } = db;
+const io = require('./socketIO')
 
-// User.hasMany(Message);
-// Message.belongsTo(User);
-
-// console.log(User())
-
+io;
 
 const PORT = secrets.port;
 
-server.listen(PORT, () => {
-  console.log(`\n *** Server Running on http://localhost:${PORT} ***\n`);
-});
+// server.listen(PORT, () => {
+//   console.log(`\n *** Server Running on http://localhost:${PORT} ***\n`);
+// });

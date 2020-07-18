@@ -1,30 +1,36 @@
 const express = require("express");
 const userRouter = require("./userRouter");
+const secrets = require("../secrets");
 
+const app = express();
 // I probably want helmet, morgan (logging middleware) and cors
 
-const server = express();
 
 // Middleware
-server.use(express.json());
+app.use(express.json());
 
 // Routers
-server.use("/users", userRouter);
+app.use("/users", userRouter);
 
 // Sanity Check Route
-server.get("/", (req, res, next) => {
+app.get("/", (req, res, next) => {
   res.json({ message: "I work" });
 });
 
 // Wrong Route Handler
-server.use((req, res) => {
+app.use((req, res) => {
   res.status(401).json({ error: "Route does not exist" });
 });
 
 // Global Error Handler
-server.use((err, req, res, next) => {
+app.use((err, req, res, next) => {
   console.log("Global Error: ", err);
   res.status(err.status || 500).json({ message: err.message, err });
+});
+const PORT = secrets.port;
+
+const server = app.listen(PORT, () => {
+  console.log(`\n *** Server Running on http://localhost:${PORT} ***\n`);
 });
 
 module.exports = server;

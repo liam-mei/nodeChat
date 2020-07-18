@@ -4,7 +4,10 @@
   "description": "basic backend to experiment with sequelize, postgres, socket.io, node/express",
   "main": "index.js",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
+    "helmet": "^4.0.0",
+    "jsonwebtoken": "^8.5.1",
     "node": "^14.5.0",
     "pg": "^8.2.2",
     "pg-hstore": "^2.3.3",
