@@ -7,19 +7,19 @@ module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.bulkInsert("Users", [
       {
-        name: "derrick",
+        name: "user1",
         password: await hash("password"),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: "kevin",
+        name: "user2",
         password: await hash("password"),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
-        name: "david",
+        name: "user3",
         password: await hash("password"),
         createdAt: new Date(),
         updatedAt: new Date(),
