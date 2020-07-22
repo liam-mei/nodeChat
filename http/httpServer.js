@@ -25,7 +25,7 @@ app.use((req, res) => {
 // Global Error Handler
 app.use((err, req, res, next) => {
   console.log("Global Error: ", err);
-  res.status(err.status || 500).json({ message: err.message, err });
+  res.status(err.status || 500).json({ err });
 });
 const PORT = secrets.port;
 
