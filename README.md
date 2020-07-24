@@ -4,10 +4,13 @@ basic backend to experiment with sequelize, postgres, socket.io, node/express
 
 HTTP Endpoints
 /login
+/makeRoom
+/listRooms/searchString
+/joinRoom
 
 
 Socket Endpoints
-/chat
+/chat /enterRoom
 
 
 Database
@@ -45,3 +48,13 @@ kill -9 $(ps aux | grep '\snode\s' | awk '{print $2}')
 1. Todos
    1. seed data
    2. make login endpoint
+   3. react side login
+   4.
+   5. node create room endpoint
+   6. react create room
+   7. node join room endpoint
+   8. react join room
+   9. socket receive messages for chat
+   10. react - send messages
+2. Authentication
+   1. get payload from token and assert token is from actual user
