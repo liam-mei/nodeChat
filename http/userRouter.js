@@ -15,7 +15,7 @@ router.get("/login", async (req, res, next) => {
   if (!username || !password)
     next({
       status: 400,
-      message: "please fill out both user and password",
+      message: "please fill out both username and password",
     });
 
   try {
