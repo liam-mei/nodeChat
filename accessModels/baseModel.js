@@ -1,4 +1,4 @@
-const { User, Message, Room, RoomUsers } = require("../database/models");
+const { User, Message, Room, RoomUser } = require("../database/models");
 
 class DataAccessModel {
   constructor(model) {
@@ -26,4 +26,14 @@ class DataAccessModel {
   }
 }
 
-module.exports = {};
+const UserAccessModel = new DataAccessModel(User);
+const MessageAccessModel = new DataAccessModel(Message);
+const RoomAccessModel = new DataAccessModel(Room);
+const RoomUserAccessModel = new DataAccessModel(RoomUser);
+
+module.exports = {
+  UserAccessModel,
+  MessageAccessModel,
+  RoomAccessModel,
+  RoomUserAccessModel,
+};

@@ -1,12 +1,14 @@
 const server = require("./http/httpServer");
-const secrets = require("./secrets");
+// const secrets = require("./secrets");
 const db = require("./database/models");
 
-const io = require('./socketIO')
+// db.sequelize.sync({ force: true });
 
-io;
+const io = require("./socketIO");
 
-const PORT = secrets.port;
+// io;
+
+// const PORT = secrets.port;
 
 // server.listen(PORT, () => {
 //   console.log(`\n *** Server Running on http://localhost:${PORT} ***\n`);
