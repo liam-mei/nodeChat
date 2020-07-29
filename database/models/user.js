@@ -1,8 +1,6 @@
 const bcrypt = require("bcryptjs");
-const secrets = require('../../secrets');
-// const hash = async (password) => await bcrypt.hash(password, 12);
 
-module.exports = async (sequelize, DataTypes) => {
+module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define("User", {
     username: DataTypes.STRING,
     password: {
