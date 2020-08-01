@@ -1,32 +1,36 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
+const cors = require("cors");
+
 const userRouter = require("./userRouter");
+const protectedRouter = require("./protectedRouter");
+const {
+  restricted,
+  sanityCheck,
+  wrongRoute,
+  globalErrorHandler,
+} = require("./middleware");
 const secrets = require("../secrets");
 
 const app = express();
-// I probably want helmet, morgan (logging middleware) and cors
-
 
 // Middleware
-app.use(express.json());
+app.use(express.json(), cookieParser(), helmet(), cors());
 
 // Routers
 app.use("/users", userRouter);
+app.use("/protected", restricted, protectedRouter);
 
 // Sanity Check Route
-app.get("/", (req, res, next) => {
-  res.json({ message: "I work" });
-});
+app.get("/", sanityCheck);
 
 // Wrong Route Handler
-app.use((req, res) => {
-  res.status(401).json({ error: "Route does not exist" });
-});
+app.use(wrongRoute);
 
 // Global Error Handler
-app.use((err, req, res, next) => {
-  console.log("Global Error: ", err);
-  res.status(err.status || 500).json({ err });
-});
+app.use(globalErrorHandler);
+
 const PORT = secrets.port;
 
 const server = app.listen(PORT, () => {
