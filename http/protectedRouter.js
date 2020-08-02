@@ -26,5 +26,18 @@ router.get("/listrooms/:query", async (req, res, next) => {
   }
 });
 
+router.post("/joinroom/:roomId", async (req, res, next) => {
+  const { roomId } = req.params;
+  try {
+    const joinedRoom = await RoomUserAccessModel.create({
+      roomId,
+      userId: req.user.id,
+    });
+
+    res.json(joinedRoom);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = router;
