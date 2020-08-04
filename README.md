@@ -58,3 +58,4 @@ kill -9 $(ps aux | grep '\snode\s' | awk '{print $2}')
    10. react - send messages
 2. Authentication
    1. get payload from token and assert token is from actual user
+   2. handle when user signs in from multiple clients

@@ -4,7 +4,8 @@
     "password": null,
     "database": "chat-dev",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "underscored": true
   },
   "test": {
     "username": "kevinmei",
