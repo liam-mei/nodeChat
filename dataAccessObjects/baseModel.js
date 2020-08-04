@@ -6,6 +6,7 @@ class DataAccessModel {
   }
 
   find(filter = {}) {
+    console.log("i got called");
     return this.model.findAll({ where: filter });
   }
 
@@ -26,14 +27,14 @@ class DataAccessModel {
   }
 }
 
-const UserAccessModel = new DataAccessModel(User);
-const MessageAccessModel = new DataAccessModel(Message);
-const RoomAccessModel = new DataAccessModel(Room);
-const RoomUserAccessModel = new DataAccessModel(RoomUser);
+const UserAccessObject = new DataAccessModel(User);
+const MessageAccessObject = new DataAccessModel(Message);
+const RoomAccessObject = new DataAccessModel(Room);
+const RoomUserAccessObject = new DataAccessModel(RoomUser);
 
 module.exports = {
-  UserAccessModel,
-  MessageAccessModel,
-  RoomAccessModel,
-  RoomUserAccessModel,
+  UserAccessObject,
+  MessageAccessObject,
+  RoomAccessObject,
+  RoomUserAccessObject,
 };
