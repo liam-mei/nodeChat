@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Messages', {
+    await queryInterface.createTable('messages', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -13,19 +13,22 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        field: 'created_at'
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        field: 'updated_at'
       },
-      userId: {
+      user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Users'
+          model: 'Users',
+          foreignKey: 'user_id'
         }
       },
-      roomId: {
+      room_id: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Rooms'
@@ -34,6 +37,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Messages');
+    await queryInterface.dropTable('messages');
   }
 };
