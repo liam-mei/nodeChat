@@ -3,7 +3,10 @@ const express = require("express");
 // const jwt = require("jsonwebtoken");
 // const secrets = require("../secrets");
 // const db = require("../database/models");
-const { RoomAccessModel, RoomUserAccessModel } = require("../accessModels");
+const {
+  RoomAccessObject,
+  RoomUserAccessObject,
+} = require("../dataAccessObjects");
 
 const router = express.Router({
   mergeParams: true,
@@ -11,7 +14,7 @@ const router = express.Router({
 
 router.get("/listrooms", async (req, res, next) => {
   try {
-    res.json(await RoomAccessModel.find());
+    res.json(await RoomAccessObject.find());
   } catch (error) {
     next(error);
   }
@@ -20,7 +23,7 @@ router.get("/listrooms", async (req, res, next) => {
 router.get("/listrooms/:query", async (req, res, next) => {
   const { query } = req.params;
   try {
-    res.json(await RoomAccessModel.find({ name: query }));
+    res.json(await RoomAccessObject.find({ name: query }));
   } catch (error) {
     next(error);
   }
@@ -29,7 +32,8 @@ router.get("/listrooms/:query", async (req, res, next) => {
 router.post("/joinroom/:roomId", async (req, res, next) => {
   const { roomId } = req.params;
   try {
-    const joinedRoom = await RoomUserAccessModel.create({
+    // should verify user is not a part of this room first
+    const joinedRoom = await RoomUserAccessObject.create({
       roomId,
       userId: req.user.id,
     });

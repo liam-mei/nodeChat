@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const secrets = require("../secrets");
 
-const { UserAccessModel, RoomAccessModel } = require("../accessModels");
+const { UserAccessObject, RoomAccessObject } = require("../dataAccessObjects");
 
 const router = express.Router({
   mergeParams: true,
@@ -19,16 +19,20 @@ router.get("/login", async (req, res, next) => {
     });
 
   try {
-    const user = await UserAccessModel.findOne({ username });
+    const user = await UserAccessObject.findOne({ username });
     if (!user) {
       next({ status: 400, message: "username not valid" });
     }
 
     const passwordValid = await bcrypt.compare(password, user.password);
     if (passwordValid) {
-      const token = jwt.sign({ username: user.username, id: user.id }, secrets.secret, {
-        expiresIn: "7d",
-      });
+      const token = jwt.sign(
+        { username: user.username, id: user.id },
+        secrets.secret,
+        {
+          expiresIn: "7d",
+        }
+      );
 
       // I would use a httpOnly cookie but a token is required to
       // authenticate for socket
@@ -55,10 +59,10 @@ router.post("/register", async (req, res, next) => {
     });
 
   try {
-    const userExists = await UserAccessModel.findOne({ username });
+    const userExists = await UserAccessObject.findOne({ username });
     if (userExists) res.status(400).json({ error: "username already exists" });
 
-    const newUser = await UserAccessModel.create({ username, password });
+    const newUser = await UserAccessObject.create({ username, password });
 
     res.status(201).json(newUser);
   } catch (error) {
