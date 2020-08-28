@@ -24,14 +24,14 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Users',
+          model: 'users',
           foreignKey: 'user_id'
         }
       },
       room_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'Rooms'
+          model: 'rooms'
         }
       }
     });
