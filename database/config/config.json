@@ -1,11 +1,7 @@
 {
   "development": {
-    "username": "kevinmei",
-    "password": null,
-    "database": "chat-dev",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "underscored": true
+    "url": "postgres://cztvsobg:vnUrFwmxQzG0V5CttR8XpjH89N1Mqtcs@lallah.db.elephantsql.com:5432/cztvsobg",
+    "dialect": "postgres"
   },
   "test": {
     "username": "kevinmei",
