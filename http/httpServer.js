@@ -16,7 +16,7 @@ const secrets = require("../secrets");
 const app = express();
 
 // Middleware
-app.use(express.json(), cookieParser(), helmet(), cors());
+app.use(cookieParser(), helmet(), cors(), express.json());
 
 // Routers
 app.use("/users", userRouter);

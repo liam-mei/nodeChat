@@ -13,6 +13,7 @@ io.on("connection", async (socket) => {
 
   socket.on("getRooms", async () => {
     console.log("getting Rooms");
+    // want to change to get rooms ordered by last message
     const currentRooms = await RoomAccessObject.find();
 
     socket.emit("rooms", currentRooms);

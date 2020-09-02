@@ -30,17 +30,18 @@ router.post("/login", async (req, res, next) => {
         { username: user.username, id: user.id },
         secrets.secret,
         {
-          expiresIn: "7d",
+          // expiresIn: "7d",
+          expiresIn: "10000000",
         }
       );
-
+        console.log(`token: ${token}`)
       // I would use a httpOnly cookie but a token is required to
       // authenticate for socket
-      res.cookie("token", token, {
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-        // httpOnly: true,
-      });
-      res.json({ message: `Welcome ${user.username}` });
+      // res.cookie("token", token, {
+      //   maxAge: 1000 * 60 * 60 * 24 * 7,
+      //   // httpOnly: false,
+      // })
+      res.json({ message: `Welcome ${user.username}`, token });
     } else {
       next({ status: 401, message: "Invalid Credentials" });
     }
