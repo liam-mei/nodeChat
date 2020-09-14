@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "User",
     {
-      username: DataTypes.STRING,
+      username: { type: DataTypes.STRING, unique: true },
       password: {
         type: DataTypes.STRING,
         set(password) {
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = (models) => {
     User.hasMany(models.Message, {
-      foreignKey: 'user_id'
+      foreignKey: "user_id",
       // onDelete: "SET NULL",
     });
     User.belongsToMany(models.Room, {

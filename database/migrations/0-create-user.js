@@ -10,6 +10,7 @@ module.exports = {
       },
       username: {
         type: Sequelize.STRING,
+        unique: true,
       },
       password: {
         type: Sequelize.STRING,
@@ -17,12 +18,12 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        field: 'created_at'
+        field: "created_at",
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        field: 'updated_at'
+        field: "updated_at",
       },
     });
   },
