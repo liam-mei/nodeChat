@@ -5,9 +5,9 @@ class DataAccessModel {
     this.model = model;
   }
 
-  find(filter = {}) {
-    console.log("i got called");
-    return this.model.findAll({ where: filter });
+  find(where = {}, include = []) {
+    // console.log("i got called");
+    return this.model.findAll({ where, include });
   }
 
   findOne(filter) {
