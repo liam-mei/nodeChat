@@ -1,6 +1,6 @@
 const socketIO = require("socket.io");
-const jwt = require("jsonwebtoken");
 
+const jwt = require("jsonwebtoken");
 const secrets = require("../secrets");
 
 const httpServer = require("../http/httpServer");
@@ -11,8 +11,26 @@ const {
 
 const io = socketIO(httpServer);
 
-io.on("connection", async (socket) => {
+io.use(function (socket, next) {
+  console.log(socket.handshake.query);
+  if (socket.handshake.query && socket.handshake.query.token) {
+    jwt.verify(socket.handshake.query.token, secrets.secret, function (
+      err,
+      decoded
+    ) {
+      if (err) return next(new Error("Authentication error"));
+      socket.decoded = decoded;
+      next();
+    });
+  } else {
+    console.log("auth error");
+    next(new Error("Authentication error"));
+  }
+}).on("connection", async (socket) => {
   console.log("a client connected");
+  setTimeout(() => {
+    socket.disconnect();
+  }, secrets.tokenExpiration);
 
   // socket.on('clientTopSocketTest', data => {
   //   console.log(data)
@@ -32,7 +50,7 @@ io.on("connection", async (socket) => {
     // console.log({ roomToLeave });
     if (rooms.length > 1) {
       socket.leave(rooms[0]);
-      console.log(`I left room: ${rooms[0]}`)
+      console.log(`I left room: ${rooms[0]}`);
     }
     socket.join(id);
     console.log(`someone joined roomId: ${id}`);
@@ -66,10 +84,9 @@ io.on("connection", async (socket) => {
     // socket.disconnect();
   });
 
-  socket.on('logOff', () => {
+  socket.on("logOff", () => {
     socket.disconnect();
-  })
-
+  });
 });
 
 module.exports = io;

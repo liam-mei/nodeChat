@@ -30,7 +30,7 @@ router.post("/login", async (req, res, next) => {
         secrets.secret,
         {
           // expiresIn: "7d",
-          expiresIn: "10000000",
+          expiresIn: secrets.tokenExpiration,
         }
       );
 
