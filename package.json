@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "basic backend to experiment with sequelize, postgres, socket.io, node/express",
   "main": "index.js",
+  "engines": {
+    "node": "13.x"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
@@ -19,7 +22,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
