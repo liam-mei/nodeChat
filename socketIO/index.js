@@ -39,7 +39,11 @@ io.use(function (socket, next) {
   socket.on("getRooms", async () => {
     console.log("getting Rooms");
     // want to change to get rooms ordered by last message
-    const currentRooms = await RoomAccessObject.find();
+    const currentRooms = await RoomAccessObject.find(
+      {},
+      ["Messages"],
+      [["Messages", "id", "DESC"]]
+    );
 
     socket.emit("rooms", currentRooms);
   });
@@ -63,7 +67,7 @@ io.use(function (socket, next) {
     socket.emit("currentMessages", roomMessages);
   });
 
-  socket.on("sendMessage", (data) => {
+  socket.on("sendMessage", async (data) => {
     console.log(`received message: ${JSON.stringify(data)}`);
     try {
       const decodedToken = jwt.decode(data.token, secrets.secret);
@@ -74,6 +78,15 @@ io.use(function (socket, next) {
         message: data.message,
         user_id: decodedToken.id,
       });
+
+      // const currentRooms = await RoomAccessObject.find(
+      //   {},
+      //   ["Messages"],
+      //   [["Messages", "id", "DESC"]]
+      // );
+
+      // io.emit('rooms', currentRooms);
+      // socket.emit("rooms", currentRooms);
     } catch (error) {
       console.log(error);
     }
