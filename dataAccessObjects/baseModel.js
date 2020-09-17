@@ -6,7 +6,6 @@ class DataAccessModel {
   }
 
   find(where = {}, include = [], order = []) {
-    // console.log("i got called");
     return this.model.findAll({ where, include, order });
   }
 

@@ -1,4 +1,4 @@
-const userController = require("./userController");
+// const userController = require("./userController");
 const {
   UserAccessObject,
   MessageAccessObject,
@@ -7,7 +7,7 @@ const {
 } = require("./baseModel");
 
 module.exports = {
-  userController,
+  // userController,
   UserAccessObject,
   MessageAccessObject,
   RoomAccessObject,
