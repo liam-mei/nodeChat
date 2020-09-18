@@ -14,24 +14,23 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        field: 'created_at'
       },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE,
-        field: 'updated_at'
       },
-      user_id: {
+      userId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'users',
-          foreignKey: 'user_id'
+          foreignKey: 'userId'
         }
       },
-      room_id: {
+      roomId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'rooms'
+          model: 'rooms',
+          foreignKey: 'roomId'
         }
       }
     });
