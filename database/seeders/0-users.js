@@ -9,20 +9,20 @@ module.exports = {
       {
         username: "user1",
         password: await hash("password"),
-        created_at: new Date(),
-        updated_at: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         username: "user2",
         password: await hash("password"),
-        created_at: new Date(),
-        updated_at: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
         username: "user3",
         password: await hash("password"),
-        created_at: new Date(),
-        updated_at: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ]);
   },

@@ -2,47 +2,47 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkInsert("room_users", [
+    await queryInterface.bulkInsert("roomUsers", [
       {
-        user_id: 1,
-        room_id: 1,
-        created_at: new Date(),
-        updated_at: new Date(),
+        userId: 1,
+        roomId: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
-        user_id: 2,
-        room_id: 1,
-        created_at: new Date(),
-        updated_at: new Date(),
+        userId: 2,
+        roomId: 1,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
-        user_id: 2,
-        room_id: 2,
-        created_at: new Date(),
-        updated_at: new Date(),
+        userId: 2,
+        roomId: 2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
-        user_id: 3,
-        room_id: 2,
-        created_at: new Date(),
-        updated_at: new Date(),
+        userId: 3,
+        roomId: 2,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
-        user_id: 3,
-        room_id: 3,
-        created_at: new Date(),
-        updated_at: new Date(),
+        userId: 3,
+        roomId: 3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
       {
-        user_id: 2,
-        room_id: 3,
-        created_at: new Date(),
-        updated_at: new Date(),
+        userId: 2,
+        roomId: 3,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     ]);
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("room_users", null, {});
+    await queryInterface.bulkDelete("roomUsers", null, {});
   },
 };
