@@ -1,16 +1,16 @@
-const { User, Message, Room, RoomUser } = require("../database/models");
+const { user, message, room, roomUser } = require("../database/models");
 
 class DataAccessModel {
   constructor(model) {
     this.model = model;
   }
 
-  find(where = {}, include = [], order = []) {
-    return this.model.findAll({ where, include, order });
+  find(query = {}) {
+    return this.model.findAll(query);
   }
 
-  findOne(filter) {
-    return this.model.findOne({ where: filter });
+  findOne(query = {}) {
+    return this.model.findOne(query);
   }
 
   create(attributes) {
@@ -26,10 +26,10 @@ class DataAccessModel {
   }
 }
 
-const UserAccessObject = new DataAccessModel(User);
-const MessageAccessObject = new DataAccessModel(Message);
-const RoomAccessObject = new DataAccessModel(Room);
-const RoomUserAccessObject = new DataAccessModel(RoomUser);
+const UserAccessObject = new DataAccessModel(user);
+const MessageAccessObject = new DataAccessModel(message);
+const RoomAccessObject = new DataAccessModel(room);
+const RoomUserAccessObject = new DataAccessModel(roomUser);
 
 module.exports = {
   UserAccessObject,
