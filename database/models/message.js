@@ -1,26 +1,26 @@
 module.exports = (sequelize, DataTypes) => {
-  const Message = sequelize.define(
-    "Message",
+  const message = sequelize.define(
+    "message",
     {
       message: {
         type: DataTypes.STRING,
       },
-      createdAt: { type: DataTypes.DATE, field: "created_at" },
-      updatedAt: { type: DataTypes.DATE, field: "updated_at" },
+      createdAt: { type: DataTypes.DATE },
+      updatedAt: { type: DataTypes.DATE },
     },
     { tableName: "messages" }
   );
 
-  Message.associate = (models) => {
-    Message.belongsTo(models.User, {
-      foreignKey: "user_id",
+  message.associate = (models) => {
+    message.belongsTo(models.user, {
+      foreignKey: "userId",
       // onDelete: "SET NULL",
     });
-    Message.belongsTo(models.Room, {
-      foreignKey: "room_id",
+    message.belongsTo(models.room, {
+      foreignKey: "roomId",
       // onDelete: "SET NULL",
     });
   };
 
-  return Message;
+  return message;
 };

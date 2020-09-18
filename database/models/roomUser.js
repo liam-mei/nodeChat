@@ -1,16 +1,25 @@
 module.exports = (sequelize, DataTypes) => {
-  const RoomUser = sequelize.define(
-    "RoomUser",
+  const roomUser = sequelize.define(
+    "roomUser",
     {
-      user_id: DataTypes.INTEGER,
-      room_id: DataTypes.INTEGER,
-      createdAt: { type: DataTypes.DATE, field: "created_at" },
-      updatedAt: { type: DataTypes.DATE, field: "updated_at" },
+      userId: { type: DataTypes.INTEGER, references: { model: 'user' } },
+      roomId: { type: DataTypes.INTEGER, references: { model: 'room' } },
+      createdAt: { type: DataTypes.DATE },
+      updatedAt: { type: DataTypes.DATE },
     },
-    { tableName: "room_users" }
+    { tableName: "roomUsers" }
   );
 
-  RoomUser.associate = (models) => {};
+  roomUser.associate = (models) => {
+    roomUser.belongsTo(models.user, {
+      foreignKey: "userId",
+      // onDelete: "SET NULL",
+    });
+    roomUser.belongsTo(models.room, {
+      foreignKey: "roomId",
+      // onDelete: "SET NULL",
+    });
+  };
 
-  return RoomUser;
+  return roomUser;
 };

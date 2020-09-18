@@ -1,8 +1,8 @@
 const bcrypt = require("bcryptjs");
 
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    "User",
+  const user = sequelize.define(
+    "user",
     {
       username: { type: DataTypes.STRING, unique: true },
       password: {
@@ -13,21 +13,21 @@ module.exports = (sequelize, DataTypes) => {
           this.setDataValue("password", hashedPassword);
         },
       },
-      createdAt: { type: DataTypes.DATE, field: "created_at" },
-      updatedAt: { type: DataTypes.DATE, field: "updated_at" },
+      createdAt: { type: DataTypes.DATE },
+      updatedAt: { type: DataTypes.DATE },
     },
     { tableName: "users" }
   );
 
-  User.associate = (models) => {
-    User.hasMany(models.Message, {
-      foreignKey: "user_id",
+  user.associate = (models) => {
+    user.hasMany(models.message, {
+      foreignKey: "userId",
       // onDelete: "SET NULL",
     });
-    User.belongsToMany(models.Room, {
-      through: "RoomUsers",
+    user.belongsToMany(models.room, {
+      through: models.roomUser,
     });
   };
 
-  return User;
+  return user;
 };

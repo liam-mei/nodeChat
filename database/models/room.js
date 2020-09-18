@@ -1,23 +1,23 @@
 module.exports = (sequelize, DataTypes) => {
-  const Room = sequelize.define(
-    "Room",
+  const room = sequelize.define(
+    "room",
     {
       name: DataTypes.STRING,
-      createdAt: { type: DataTypes.DATE, field: "created_at" },
-      updatedAt: { type: DataTypes.DATE, field: "updated_at" },
+      createdAt: { type: DataTypes.DATE },
+      updatedAt: { type: DataTypes.DATE },
     },
     { tableName: "rooms" }
   );
 
-  Room.associate = (models) => {
-    Room.hasMany(models.Message, {
-      foreignKey: "room_id"
+  room.associate = (models) => {
+    room.hasMany(models.message, {
+      foreignKey: "roomId",
       // onDelete: "SET NULL",
     });
-    Room.belongsToMany(models.User, {
-      through: "RoomUsers",
+    room.belongsToMany(models.user, {
+      through: models.roomUser,
     });
   };
 
-  return Room;
+  return room;
 };
