@@ -3,10 +3,14 @@ const socketIO = require("socket.io");
 const jwt = require("jsonwebtoken");
 const secrets = require("../secrets");
 
+// testing nested query
+const { user, message, room, roomUser } = require("../database/models");
+
 const httpServer = require("../http/httpServer");
 const {
   MessageAccessObject,
   RoomAccessObject,
+  RoomUserAccessObject,
 } = require("../dataAccessObjects");
 
 const io = socketIO(httpServer);
@@ -36,22 +40,47 @@ io.use(function (socket, next) {
   //   console.log(data)
   // })
 
-  socket.on("getRooms", async () => {
+  //======= GET ROOMS =====
+  socket.on("getRooms", async (username) => {
     console.log("getting Rooms");
-    // want to change to get rooms ordered by last message
-    const currentRooms = await RoomAccessObject.find(
-      {},
-      ["Messages"],
-      [["Messages", "id", "DESC"]]
-    );
 
-    socket.emit("rooms", currentRooms);
+    // Original Take querying for all rooms
+    const currentRooms = await RoomAccessObject.find({
+      attributes: ["id", "name"],
+      include: [
+        {
+          model: message,
+          attributes: ["id", "roomId", "message", "userId", 'createdAt'],
+          limit: 1,
+          order: [["id", "DESC"]],
+          include: [
+            {
+              model: user,
+              attributes: ["id", "username"],
+            },
+          ],
+        },
+        {
+          model: user,
+          where: { username: username || 'user2' },
+          through: { attributes: [] },
+        },
+      ],
+      order: [["id", "DESC"]],
+    });
+
+    let roomObject = {};
+    for (let room of currentRooms) {
+      roomObject[room.name] = room;
+    }
+
+
+    socket.emit("rooms", roomObject);
   });
 
+  // ======== JOIN ROOM ==========
   socket.on("joinRoom", async (id) => {
     const rooms = Object.keys(socket.rooms);
-    // console.log({rooms});
-    // console.log({ roomToLeave });
     if (rooms.length > 1) {
       socket.leave(rooms[0]);
       console.log(`I left room: ${rooms[0]}`);
@@ -59,11 +88,12 @@ io.use(function (socket, next) {
     socket.join(id);
     console.log(`someone joined roomId: ${id}`);
 
-    const roomMessages = await MessageAccessObject.find(
-      { room_id: id },
-      ["User"],
-      ["id"]
-    );
+    const roomMessages = await MessageAccessObject.find({
+      where: { roomId: id },
+      include: [user],
+      order: ["id"],
+    });
+
     socket.emit("currentMessages", roomMessages);
   });
 
@@ -72,21 +102,12 @@ io.use(function (socket, next) {
     try {
       const decodedToken = jwt.decode(data.token, secrets.secret);
       delete data.token;
-      socket.to(data.room_id).emit("newMessage", data);
+      socket.to(data.roomId).emit("newMessage", data);
       MessageAccessObject.create({
-        room_id: data.room_id,
+        roomId: data.room_id,
         message: data.message,
-        user_id: decodedToken.id,
+        userId: decodedToken.id,
       });
-
-      // const currentRooms = await RoomAccessObject.find(
-      //   {},
-      //   ["Messages"],
-      //   [["Messages", "id", "DESC"]]
-      // );
-
-      // io.emit('rooms', currentRooms);
-      // socket.emit("rooms", currentRooms);
     } catch (error) {
       console.log(error);
     }
