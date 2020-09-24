@@ -21,7 +21,8 @@ router.post("/login", async (req, res, next) => {
   }
 
   try {
-    const user = await UserAccessObject.findOne({ username });
+    const user = await UserAccessObject.findOne({ where: { username } });
+    // console.log({ user });
 
     if (!user) {
       next({ status: 401, message: "Invalid Credentials" });
@@ -57,7 +58,7 @@ router.post("/register", async (req, res, next) => {
     });
 
   try {
-    const userExists = await UserAccessObject.findOne({ username });
+    const userExists = await UserAccessObject.findOne({ where: { username } });
     if (userExists) {
       next({ status: 400, error: "Username already exists" });
     } else {
@@ -68,7 +69,7 @@ router.post("/register", async (req, res, next) => {
         secrets.secret,
         {
           // expiresIn: "7d",
-          expiresIn: "10000000",
+          expiresIn: secrets.tokenExpiration,
         }
       );
 
