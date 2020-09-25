@@ -15,6 +15,9 @@ const {
 
 const io = socketIO(httpServer);
 
+// This is a list of all clients
+const clients = {};
+
 io.use(function (socket, next) {
   console.log(socket.handshake.query);
   if (socket.handshake.query && socket.handshake.query.token) {
@@ -23,7 +26,10 @@ io.use(function (socket, next) {
       decoded
     ) {
       if (err) return next(new Error("Authentication error"));
-      socket.decoded = decoded;
+      socket.user = decoded;
+
+      // can use username or can use userId.  Which is better???!!!
+      clients[decoded.username] = socket;
       next();
     });
   } else {
@@ -41,18 +47,20 @@ io.use(function (socket, next) {
   // })
 
   //======= GET ROOMS =====
-  socket.on("getRooms", async (username) => {
-    console.log("getting Rooms");
+  socket.on("getRooms", async () => {
+    console.log("getting userRooms");
 
     // Original Take querying for all rooms
-    const currentRooms = await RoomAccessObject.find({
+    const userRooms = await RoomAccessObject.find({
       attributes: ["id", "name"],
       include: [
         {
           model: message,
-          attributes: ["id", "roomId", "message", "userId", 'createdAt'],
+          attributes: ["id", "roomId", "message", "userId", "createdAt"],
           limit: 1,
           order: [["id", "DESC"]],
+          // duplicating: false,
+          // separate: true,
           include: [
             {
               model: user,
@@ -62,51 +70,101 @@ io.use(function (socket, next) {
         },
         {
           model: user,
-          where: { username: username || 'user2' },
+          where: { username: socket.user.username },
           through: { attributes: [] },
         },
       ],
       order: [["id", "DESC"]],
+      // order: [[ message, "id", "DESC"]],
+      // // order: [[Sequelize.literal(`messages.id`), `DESC`]],
+      // subQuery: false,
+      separate: true,
     });
+    // console.log(userRooms)
 
     let roomObject = {};
-    for (let room of currentRooms) {
-      roomObject[room.name] = room;
+    for (let room of userRooms) {
+      roomObject["r" + room.id] = room;
     }
 
-
-    socket.emit("rooms", roomObject);
+    socket.emit("userRooms", roomObject);
   });
 
-  // ======== JOIN ROOM ==========
-  socket.on("joinRoom", async (id) => {
-    const rooms = Object.keys(socket.rooms);
-    if (rooms.length > 1) {
-      socket.leave(rooms[0]);
-      console.log(`I left room: ${rooms[0]}`);
-    }
-    socket.join(id);
-    console.log(`someone joined roomId: ${id}`);
+  // ======== GET ROOM ==========
+  socket.on("getRoom", async (id) => {
+    // GETTING RID OF JOINING DIFFERENT ROOMS.  MESSAGES ARE NOW SENT VIA USERS
+    // const rooms = Object.keys(socket.rooms);
+    // if (rooms.length > 1) {
+    //   socket.leave(rooms[0]);
+    //   console.log(`I left room: ${rooms[0]}`);
+    // }
+    // socket.join(id);
+    // console.log(`someone joined roomId: ${id}`);
 
-    const roomMessages = await MessageAccessObject.find({
-      where: { roomId: id },
-      include: [user],
-      order: ["id"],
+    const currentRoom = await RoomAccessObject.findOne({
+      attributes: ["id", "name"],
+      include: [
+        {
+          model: message,
+          attributes: ["id", "roomId", "message", "userId", "createdAt"],
+          limit: 50,
+          // order: [["id", "DESC"]],
+          include: [
+            {
+              model: user,
+              attributes: ["id", "username"],
+            },
+          ],
+        },
+        {
+          model: user,
+          through: { attributes: [] },
+        },
+      ],
+      order: [["id", "DESC"]],
+      where: { id },
     });
+    console.log("sending room****************");
 
-    socket.emit("currentMessages", roomMessages);
+    socket.emit("currentRoom", currentRoom);
   });
 
-  socket.on("sendMessage", async (data) => {
-    console.log(`received message: ${JSON.stringify(data)}`);
+  socket.on("sendMessage", async (newMessage) => {
+    console.log(`received message: ${JSON.stringify(newMessage)}`);
+
+    // do I want to be constantly decoding?  I don't think so.  But here is an example of how you would do that
+    // try {
+    //   const decodedToken = jwt.decode(data.token, secrets.secret);
+    //   delete data.token;
+    //   socket.to(data.roomId).emit("newMessage", data);
+    //   MessageAccessObject.create({
+    //     roomId: data.room_id,
+    //     message: data.message,
+    //     userId: decodedToken.id,
+    //   });
+    // } catch (error) {
+    //   console.log(error);
+    // }
+
     try {
-      const decodedToken = jwt.decode(data.token, secrets.secret);
-      delete data.token;
-      socket.to(data.roomId).emit("newMessage", data);
+      const { message, roomId, users } = newMessage;
+      const userId = socket.user.id;
+
       MessageAccessObject.create({
-        roomId: data.room_id,
-        message: data.message,
-        userId: decodedToken.id,
+        roomId,
+        message,
+        userId,
+      });
+      console.log(clients)
+
+      users.forEach((user) => {
+        if (clients[user.username] && socket.user.username !== user.username) {
+          console.log('found user socket =============')
+          clients[user.username].emit('newMessage', {
+            message: { message, user: { username: socket.user.username } },
+            room: "r" + roomId,
+          });
+        }
       });
     } catch (error) {
       console.log(error);
@@ -114,12 +172,14 @@ io.use(function (socket, next) {
   });
 
   socket.on("disconnect", () => {
-    console.log("something disconnected");
+    console.log(`${socket.user.username} disconnected`);
     // socket.disconnect();
+    delete clients[socket.user.username];
   });
 
   socket.on("logOff", () => {
     socket.disconnect();
+    delete clients[socket.user.username];
   });
 });
 

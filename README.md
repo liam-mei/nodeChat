@@ -9,26 +9,6 @@ HTTP Endpoints
 /joinRoom
 
 
-Socket Endpoints
-/chat /enterRoom
-
-
-Database
-user
-  name password
-
-chat
-  userId string createdAt
-
-## Steps
-
-1. make http endpoint (login)
-2. make socket endpoint (chat)
-3. make database using postgres/sequelize
-   1. users table
-   2. chat table - room table probably
-
-
 // create database command
 Sequelize Commands
 1. create rc (run command files)
@@ -39,7 +19,6 @@ Sequelize Commands
 6. sequelize db:migrate
 7. sequelize-cli seed:generate --name todo
 8. sequelize db:seed:all
-
 
 
 // Stop all node processes
@@ -117,4 +96,16 @@ const currentRooms = await RoomAccessObject.find({
 
 ``` js // limit but not order
 
+```
+
+``` js
+const rooms = {
+    room1: {
+      id: 1,
+      users: [{}],
+      messages: [{ message: "", user: { username: "" } }],
+      order: undefined,
+      name: 'room1'
+    },
+  }
 ```
