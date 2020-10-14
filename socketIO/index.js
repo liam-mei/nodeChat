@@ -1,4 +1,5 @@
 const socketIO = require("socket.io");
+const { Op } = require("sequelize");
 
 const jwt = require("jsonwebtoken");
 const secrets = require("../secrets");
@@ -52,7 +53,7 @@ io.use(function (socket, next) {
 
     // Original Take querying for all rooms
     const userRooms = await RoomAccessObject.find({
-      attributes: ["id", "name"],
+      // attributes: ["id", "name"],
       include: [
         {
           model: message,
@@ -78,7 +79,7 @@ io.use(function (socket, next) {
       // order: [[ message, "id", "DESC"]],
       // // order: [[Sequelize.literal(`messages.id`), `DESC`]],
       // subQuery: false,
-      separate: true,
+      // separate: true,
     });
     // console.log(userRooms)
 
@@ -155,12 +156,12 @@ io.use(function (socket, next) {
         message,
         userId,
       });
-      console.log(clients)
+      console.log(clients);
 
       users.forEach((user) => {
         if (clients[user.username] && socket.user.username !== user.username) {
-          console.log('found user socket =============')
-          clients[user.username].emit('newMessage', {
+          console.log("found user socket =============");
+          clients[user.username].emit("newMessage", {
             message: { message, user: { username: socket.user.username } },
             room: "r" + roomId,
           });
@@ -169,6 +170,51 @@ io.use(function (socket, next) {
     } catch (error) {
       console.log(error);
     }
+  });
+
+  socket.on("searchRooms", async (name) => {
+    const userRooms = await RoomAccessObject.find({
+      // attributes: ["id", "name"],
+      include: [
+        {
+          model: message,
+          attributes: ["id", "roomId", "message", "userId", "createdAt"],
+          limit: 1,
+          order: [["id", "DESC"]],
+          include: [
+            {
+              model: user,
+              attributes: ["id", "username"],
+            },
+          ],
+        },
+        {
+          model: user,
+          where: { username: socket.user.username },
+          through: { attributes: [] },
+        },
+      ],
+      order: [["id", "DESC"]],
+      where: { name: { [Op.iLike]: `%${name}%` } },
+    });
+
+    let roomObject = {};
+    for (let room of userRooms) {
+      roomObject["r" + room.id] = room;
+    }
+
+    socket.emit("userRooms", roomObject);
+  });
+
+  socket.on("searchUsers", async (username) => {
+    // db search here
+    const users = await user.findAll({
+      attributes: ["id", "username"],
+      order: [["id", "DESC"]],
+      where: { username: { [Op.iLike]: `%${username}%` } },
+    });
+
+    socket.emit("foundUsers", users);
   });
 
   socket.on("disconnect", () => {
